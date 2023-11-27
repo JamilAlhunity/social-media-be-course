@@ -13,8 +13,8 @@ export class PostsService {
 
     if (!user)
       throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
-
-    const post = new Post(createPostDto);
+    let length = this.posts.length;
+    const post = new Post({ ...createPostDto, id: length++ });
 
     post.addAuthor(user);
 
@@ -30,11 +30,17 @@ export class PostsService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} post`;
+    return this.posts.find((post) => post.id === id);
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+    const post = this.posts.find((post) => post.id === id);
+    post.updateOne(updatePostDto);
+    return {
+      data: post,
+      message: 'Updated Post Successfully',
+      statusCode: HttpStatus.OK,
+    };
   }
 
   remove(id: number) {

@@ -9,7 +9,11 @@ export declare class PostsController {
         message: string;
     };
     findAll(): import("./entities/post.entity").Post[];
-    findOne(id: string): string;
-    update(id: string, updatePostDto: UpdatePostDto): string;
+    findOne(id: string): import("./entities/post.entity").Post;
+    update(id: string, updatePostDto: UpdatePostDto): {
+        data: import("./entities/post.entity").Post;
+        message: string;
+        statusCode: import("@nestjs/common").HttpStatus;
+    };
     remove(id: string): string;
 }

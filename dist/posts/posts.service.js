@@ -22,7 +22,8 @@ let PostsService = class PostsService {
         const user = this.usersService.findOne(authorID);
         if (!user)
             throw new common_1.HttpException('user not found', common_1.HttpStatus.BAD_REQUEST);
-        const post = new post_entity_1.Post(createPostDto);
+        let length = this.posts.length;
+        const post = new post_entity_1.Post({ ...createPostDto, id: length++ });
         post.addAuthor(user);
         this.posts.push(post);
         return {
@@ -34,10 +35,16 @@ let PostsService = class PostsService {
         return this.posts;
     }
     findOne(id) {
-        return `This action returns a #${id} post`;
+        return this.posts.find((post) => post.id === id);
     }
     update(id, updatePostDto) {
-        return `This action updates a #${id} post`;
+        const post = this.posts.find((post) => post.id === id);
+        post.updateOne(updatePostDto);
+        return {
+            data: post,
+            message: 'Updated Post Successfully',
+            statusCode: common_1.HttpStatus.OK,
+        };
     }
     remove(id) {
         return `This action removes a #${id} post`;

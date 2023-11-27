@@ -12,7 +12,11 @@ export declare class PostsService {
         message: string;
     };
     findAll(): Post[];
-    findOne(id: number): string;
-    update(id: number, updatePostDto: UpdatePostDto): string;
+    findOne(id: number): Post;
+    update(id: number, updatePostDto: UpdatePostDto): {
+        data: Post;
+        message: string;
+        statusCode: HttpStatus;
+    };
     remove(id: number): string;
 }

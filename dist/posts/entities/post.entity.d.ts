@@ -2,6 +2,7 @@ import { User } from 'src/users/entities/user.entity';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
 export declare class Post {
+    id: number;
     author: User;
     text: string;
     image: string;
@@ -9,5 +10,6 @@ export declare class Post {
     updatedAt: string;
     constructor(createPostDto: CreatePostDto);
     updateOne(updatePostDto: UpdatePostDto): void;
-    addAuthor(author: any): void;
+    addAuthor(author: User): void;
+    updateDate(): void;
 }

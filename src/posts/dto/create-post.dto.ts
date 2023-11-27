@@ -1,6 +1,7 @@
 import { Allow, IsNotEmpty, IsUrl, MaxLength } from 'class-validator';
 
 export class CreatePostDto {
+  id: number;
   @MaxLength(2200)
   @IsNotEmpty()
   text: string;
