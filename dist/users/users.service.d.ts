@@ -4,10 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 export declare class UsersService {
     users: User[];
-    create(createUserDto: CreateUserDto): Promise<{
-        statusCode: HttpStatus;
-        message: string;
-    }>;
+    createUserForAuth(createUserDto: CreateUserDto): void;
     findAll(): User[];
     findOne(id: number): User;
     update(id: number, updateUserDto: UpdateUserDto): {
@@ -16,4 +13,5 @@ export declare class UsersService {
         statusCode: HttpStatus;
     };
     remove(id: number): string;
+    findUserByEmail(email: string): User;
 }
