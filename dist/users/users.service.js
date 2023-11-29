@@ -9,25 +9,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const user_entity_1 = require("./entities/user.entity");
-const bcrypt = require("bcrypt");
 let UsersService = class UsersService {
     constructor() {
         this.users = [];
     }
-    async create(createUserDto) {
-        const { password } = createUserDto;
+    createUserForAuth(createUserDto) {
+        const { email } = createUserDto;
+        const user = this.findUserByEmail(email);
+        if (!!user)
+            throw new common_1.HttpException('Email already exists, please choose another one', common_1.HttpStatus.CONFLICT);
         let length = this.users.length;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new user_entity_1.User({
+        const createdUser = new user_entity_1.User({
             ...createUserDto,
             id: length++,
-            password: hashedPassword,
         });
-        this.users.push(user);
-        return {
-            statusCode: common_1.HttpStatus.CREATED,
-            message: 'Created User Successfully',
-        };
+        this.users.push(createdUser);
     }
     findAll() {
         return this.users;
@@ -46,6 +42,9 @@ let UsersService = class UsersService {
     }
     remove(id) {
         return `This action removes a #${id} user`;
+    }
+    findUserByEmail(email) {
+        return this.users.find((user) => user.email === email);
     }
 };
 exports.UsersService = UsersService;

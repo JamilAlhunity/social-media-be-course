@@ -22,10 +22,17 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "username", void 0);
 __decorate([
+    (0, class_validator_2.MaxLength)(320),
+    (0, class_validator_2.MinLength)(5),
+    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_2.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "email", void 0);
 __decorate([
+    (0, class_validator_2.MaxLength)(30),
+    (0, class_validator_2.MinLength)(8),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_2.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "password", void 0);
