@@ -47,8 +47,8 @@ export class AccessTokenGuard implements CanActivate {
       return true;
     } catch (error) {
       throw new HttpException(
-        'You must be logged in first',
-        HttpStatus.UNAUTHORIZED,
+        !!error?.message ? error.message : 'You must be logged in first',
+        !!error?.status ? error.status : HttpStatus.UNAUTHORIZED,
       );
     }
   }
