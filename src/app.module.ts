@@ -1,20 +1,16 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { PostsModule } from './posts/posts.module';
-import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './core/guards/access-token/access-token.guard';
+import { ModulesModule } from 'modules/modules.module';
+import { jwtOptions } from 'shared/configs/app.option';
+import { CacheModule } from 'core/lib/cache/cache.module';
 
 @Module({
   imports: [
-    UsersModule,
-    PostsModule,
-    AuthModule,
-    JwtModule.register({
-      global: true,
-      secret: '$0cI4lM3dI4ApPf0rN3$tJ$C0uR$3_AccessToken',
-    }),
+    JwtModule.register(jwtOptions),
+    CacheModule.register('cache-manager-redis-yet'),
+    ModulesModule,
   ],
   controllers: [],
   providers: [
@@ -23,5 +19,6 @@ import { AccessTokenGuard } from './core/guards/access-token/access-token.guard'
       useClass: AccessTokenGuard,
     },
   ],
+  exports: [],
 })
 export class AppModule {}
