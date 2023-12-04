@@ -8,25 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
-const users_module_1 = require("./users/users.module");
-const posts_module_1 = require("./posts/posts.module");
-const auth_module_1 = require("./auth/auth.module");
 const jwt_1 = require("@nestjs/jwt");
 const core_1 = require("@nestjs/core");
 const access_token_guard_1 = require("./core/guards/access-token/access-token.guard");
+const modules_module_1 = require("./modules/modules.module");
+const app_option_1 = require("./shared/configs/app.option");
+const cache_module_1 = require("./core/lib/cache/cache.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            users_module_1.UsersModule,
-            posts_module_1.PostsModule,
-            auth_module_1.AuthModule,
-            jwt_1.JwtModule.register({
-                global: true,
-                secret: '$0cI4lM3dI4ApPf0rN3$tJ$C0uR$3_AccessToken',
-            }),
+            jwt_1.JwtModule.register(app_option_1.jwtOptions),
+            cache_module_1.CacheModule.register('cache-manager-redis-yet'),
+            modules_module_1.ModulesModule,
         ],
         controllers: [],
         providers: [
@@ -35,6 +31,7 @@ exports.AppModule = AppModule = __decorate([
                 useClass: access_token_guard_1.AccessTokenGuard,
             },
         ],
+        exports: [],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
