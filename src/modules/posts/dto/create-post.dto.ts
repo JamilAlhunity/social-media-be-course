@@ -10,5 +10,5 @@ export class CreatePostDto {
     message: 'Image must be a valid URL',
   })
   @IsNotEmpty()
-  image!: string; // url
+  image!: File; // url
 }

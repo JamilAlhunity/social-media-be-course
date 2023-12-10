@@ -7,14 +7,18 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Inject,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PostsServiceI } from './interfaces/post-service.interface';
+import { POST_SERVICE_PROVIDER } from './providers/post-service.provider';
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    @Inject(POST_SERVICE_PROVIDER) private readonly postsService: PostsServiceI,
+  ) {}
 
   @Post(':authorID')
   create(

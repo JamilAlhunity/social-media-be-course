@@ -12,7 +12,10 @@ export class PostsService {
     const user = this.usersService.findOne(authorID);
 
     if (!user)
-      throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'user not found, post service create',
+        HttpStatus.BAD_REQUEST,
+      );
     let length = this.posts.length;
     const post = new Post({ ...createPostDto, id: length++ });
 

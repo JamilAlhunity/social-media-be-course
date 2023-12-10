@@ -65,7 +65,7 @@ export class LoginService {
           userID: user.id + '',
           accessToken,
         },
-        0,
+        99999999,
       );
 
       return { accessToken };
