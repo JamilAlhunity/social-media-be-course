@@ -8,18 +8,24 @@ import {
   IsNumber,
   IsISO8601,
 } from 'class-validator';
+import { i18nValidationMessage } from 'nestjs-i18n';
+import { I18nTranslations } from 'resources/generated/i18n.generated';
 import { Gender } from 'shared/enums/gender.enum';
 
 export class CreateUserDto {
   id!: number;
 
   @IsString()
-  @IsNotEmpty({ message: 'Username must be provided' })
+  @IsNotEmpty({
+    message: i18nValidationMessage<I18nTranslations>('validation.isNotEmpty'),
+  })
   username!: string;
 
   @MaxLength(320)
   @MinLength(5)
-  @IsEmail()
+  @IsEmail(undefined, {
+    message: i18nValidationMessage<I18nTranslations>('validation.email'),
+  })
   @IsString()
   @IsNotEmpty()
   email!: string;

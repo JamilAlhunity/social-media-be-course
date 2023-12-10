@@ -9,28 +9,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
-const core_1 = require("@nestjs/core");
-const access_token_guard_1 = require("./core/guards/access-token/access-token.guard");
 const modules_module_1 = require("./modules/modules.module");
 const app_option_1 = require("./shared/configs/app.option");
 const cache_module_1 = require("./core/lib/cache/cache.module");
+const nestjs_i18n_1 = require("nestjs-i18n");
+const app_config_1 = require("./shared/configs/app.config");
+const logger_module_1 = require("./core/lib/logger/logger.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            logger_module_1.LoggerModule,
+            nestjs_i18n_1.I18nModule.forRoot(app_option_1.i18nOptions),
             jwt_1.JwtModule.register(app_option_1.jwtOptions),
             cache_module_1.CacheModule.register('cache-manager-redis-yet'),
             modules_module_1.ModulesModule,
         ],
         controllers: [],
-        providers: [
-            {
-                provide: core_1.APP_GUARD,
-                useClass: access_token_guard_1.AccessTokenGuard,
-            },
-        ],
+        providers: [...app_config_1.guards, ...app_config_1.filters],
         exports: [],
     })
 ], AppModule);
