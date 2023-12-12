@@ -15,20 +15,26 @@ const cache_module_1 = require("./core/lib/cache/cache.module");
 const nestjs_i18n_1 = require("nestjs-i18n");
 const app_config_1 = require("./shared/configs/app.config");
 const logger_module_1 = require("./core/lib/logger/logger.module");
+const schedule_1 = require("@nestjs/schedule");
+const cron_job_module_1 = require("./core/lib/cron-job/cron-job.module");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            config_1.ConfigModule.forRoot(app_option_1.configOptions),
             logger_module_1.LoggerModule,
+            schedule_1.ScheduleModule.forRoot(),
+            cron_job_module_1.CronJobModule,
             nestjs_i18n_1.I18nModule.forRoot(app_option_1.i18nOptions),
-            jwt_1.JwtModule.register(app_option_1.jwtOptions),
+            jwt_1.JwtModule.registerAsync(app_option_1.jwtOptions),
             cache_module_1.CacheModule.register('cache-manager-redis-yet'),
             modules_module_1.ModulesModule,
         ],
         controllers: [],
-        providers: [...app_config_1.guards, ...app_config_1.filters],
+        providers: [...app_config_1.guards, ...app_config_1.filters, ...app_config_1.interceptors],
         exports: [],
     })
 ], AppModule);

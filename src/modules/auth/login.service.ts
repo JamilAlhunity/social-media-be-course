@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CacheService } from 'core/lib/cache/cache.service';
@@ -11,6 +12,7 @@ export class LoginService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly cacheService: CacheService,
+    private readonly configService: ConfigService,
   ) {}
   /**
    * Provided Email and Password
@@ -55,8 +57,10 @@ export class LoginService {
     let accessToken = undefined;
     if (!userFromCache?.accessToken) {
       accessToken = this.jwtService.sign(payload, {
-        secret: '$0cI4lM3dI4ApPf0rN3$tJ$C0uR$3_AccessToken',
-        expiresIn: '1d',
+        secret: this.configService.get<string>('USER_ACCESS_TOKEN_SECRET')!,
+        expiresIn: this.configService.get<string>(
+          'USER_ACCESS_TOKEN_EXPIRES_IN',
+        )!,
       });
 
       await this.cacheService.set(

@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import { HttpException } from '@nestjs/common/exceptions';
+import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC_KEY } from 'core/decorators/public.decorator';
@@ -14,6 +15,7 @@ export class AccessTokenGuard implements CanActivate {
     private readonly jwtService: JwtService,
     private readonly reflect: Reflector,
     private readonly cacheService: CacheService,
+    private readonly configService: ConfigService,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
@@ -42,7 +44,7 @@ export class AccessTokenGuard implements CanActivate {
         throw new HttpException('Invalid Headers', HttpStatus.UNAUTHORIZED);
 
       const decodedToken = this.jwtService.verify<DecodedTokenI>(accessToken, {
-        secret: '$0cI4lM3dI4ApPf0rN3$tJ$C0uR$3_AccessToken',
+        secret: this.configService.get<string>('USER_ACCESS_TOKEN_SECRET')!,
       });
 
       const { sub } = decodedToken;
