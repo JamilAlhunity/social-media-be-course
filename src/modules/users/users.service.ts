@@ -11,6 +11,7 @@ export class UsersService {
     const { email } = createUserDto;
 
     const user = this.findUserByEmail(email);
+
     if (!!user)
       throw new HttpException(
         'Email already exists, please choose another one',
