@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LoggedRequestI } from 'shared/interfaces/logged-request.interface';
+import { LoggedRequestI } from 'shared/interfaces/http/logged-request.interface';
 import { RequestsFileWriterService } from '../file-writer/requests-file-writer.service';
 
 @Injectable()

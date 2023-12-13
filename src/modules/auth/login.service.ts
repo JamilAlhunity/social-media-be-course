@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CacheService } from 'core/lib/cache/cache.service';
 import { UsersService } from 'modules/users/users.service';
+import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-service.interface';
 import { LogUserInDto } from './dto/log-user-in.dto';
 
 @Injectable()
@@ -22,7 +23,9 @@ export class LoginService {
    *
    * action to show that the user logged
    */
-  async logUserIn(logUserInDto: LogUserInDto) {
+  async logUserIn(
+    logUserInDto: LogUserInDto,
+  ): Promise<ResponseFromServiceI<string>> {
     const { email } = logUserInDto;
 
     const user = this.usersService.findUserByEmail(email);
@@ -72,11 +75,19 @@ export class LoginService {
         99999999,
       );
 
-      return { accessToken };
+      return {
+        data: accessToken,
+        message: 'logged in successfully',
+        httpStatus: HttpStatus.OK,
+      };
     }
 
     accessToken = userFromCache?.accessToken;
 
-    return { accessToken };
+    return {
+      data: accessToken,
+      message: 'logged in successfully',
+      httpStatus: HttpStatus.OK,
+    };
   }
 }

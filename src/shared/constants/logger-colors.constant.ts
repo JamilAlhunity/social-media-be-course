@@ -1,7 +1,7 @@
 // ? more info on these colors
 // ? https://tforgione.fr/posts/ansi-escape-codes/
 
-import { LoggerColorI } from 'shared/interfaces/logger-color.interface';
+import { LoggerColorI } from 'shared/interfaces/general/logger-color.interface';
 
 export const logColor: LoggerColorI = {
   // message: cyan bright, context: magnet bright (my favorite)

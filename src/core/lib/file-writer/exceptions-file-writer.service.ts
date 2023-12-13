@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { createWriteStream, statSync } from 'fs';
-import { ExceptionI } from 'shared/interfaces/exception.interface';
+import { ExceptionI } from 'shared/interfaces/http/exception.interface';
 
 @Injectable()
 export class ExceptionsFileWriterService {
