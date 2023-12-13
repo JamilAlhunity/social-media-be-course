@@ -52,15 +52,20 @@ export const i18nOptions: I18nOptions = {
 };
 
 export const configOptions: ConfigModuleOptions = {
-  envFilePath: '.development.env',
+  envFilePath: `.${process.env.NODE_ENV ?? 'development'}.env`,
   isGlobal: true,
   cache: true,
   validationSchema: Joi.object({
     NODE_ENV: Joi.string()
-      .valid('development', 'production', 'stable')
-      .default('development'),
+      .min(3)
+      .max(6)
+      .valid('dev', 'prod', 'stable')
+      .required(),
     PORT: Joi.number().default(3000),
     USER_ACCESS_TOKEN_SECRET: Joi.string().min(10).required(),
     USER_ACCESS_TOKEN_EXPIRES_IN: Joi.string().min(1).required(),
+    ALLOWED_HOSTS: Joi.string().min(1).required(),
+    PREFIX: Joi.string().min(3).max(10).required(),
+    APP_NAME: Joi.string().min(3).max(30).required(),
   }),
 };

@@ -4,11 +4,11 @@ import {
   ExceptionFilter,
   HttpException,
 } from '@nestjs/common';
-import { RequestI } from 'shared/interfaces/request.interface';
+import { RequestI } from 'shared/interfaces/http/request.interface';
 import { Response } from 'express';
 import { ExceptionsLoggerService } from 'core/lib/logger/exceptions-logger.service';
 import { requestMapper } from 'shared/util/request-mapper.util';
-import { ExceptionI } from 'shared/interfaces/exception.interface';
+import { ExceptionI } from 'shared/interfaces/http/exception.interface';
 import { HttpStatus } from '@nestjs/common/enums';
 
 @Catch(HttpException)

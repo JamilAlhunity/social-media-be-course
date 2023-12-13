@@ -25,6 +25,8 @@ export class UsersService {
       id: length++,
     });
     this.users.push(createdUser);
+
+    return createdUser;
   }
 
   findAll() {

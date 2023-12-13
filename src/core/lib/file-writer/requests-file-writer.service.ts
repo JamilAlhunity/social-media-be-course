@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { createWriteStream, statSync } from 'fs';
-import { RequestsFileEntryI } from 'shared/interfaces/requests-file-entry.interface';
+import { RequestsFileEntryI } from 'shared/interfaces/http/requests-file-entry.interface';
 
 @Injectable()
 export class RequestsFileWriterService {

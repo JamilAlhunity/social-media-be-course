@@ -6,8 +6,8 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC_KEY } from 'core/decorators/public.decorator';
 import { CacheService } from 'core/lib/cache/cache.service';
-import { DecodedTokenI } from 'shared/interfaces/decoded-token.interface';
-import { RequestI } from 'shared/interfaces/request.interface';
+import { DecodedTokenI } from 'shared/interfaces/http/decoded-token.interface';
+import { RequestI } from 'shared/interfaces/http/request.interface';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {

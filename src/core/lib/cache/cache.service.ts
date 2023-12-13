@@ -1,7 +1,7 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { DynamicObjectI } from 'shared/interfaces/dynamic-object.interface';
+import { DynamicObjectI } from 'shared/interfaces/general/dynamic-object.interface';
 import { Field } from './types/field.type';
 
 @Injectable()

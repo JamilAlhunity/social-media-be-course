@@ -1,4 +1,4 @@
-import { DynamicObjectI } from './dynamic-object.interface';
+import { DynamicObjectI } from '../general/dynamic-object.interface';
 import { RequestMethod } from '@nestjs/common';
 export interface LoggedRequestI {
   path: string;
