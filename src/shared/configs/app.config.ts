@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from 'core/exception-filters/http-exception.filter';
-import { AccessTokenGuard } from 'core/guards/access-token/access-token.guard';
+import { AccessTokenGuard } from 'core/guards/access-token.guard';
 import { LoggingInterceptor } from 'core/interceptors/logging.interceptor';
 import { ResponseMappingInterceptor } from 'core/interceptors/response-mapping.interceptor';
 
