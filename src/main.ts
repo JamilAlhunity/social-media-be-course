@@ -67,26 +67,28 @@ async function bootstrap() {
 
   app.useLogger(logger);
 
-  const config = new DocumentBuilder()
-    .setTitle('NestJS Skeleton')
-    .setDescription(
-      'Starter code for lightweight to middle size projects (Backend Development: NestJS)',
-    )
-    .setVersion('1.0')
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        name: 'JWT',
-        description: 'Enter JWT token',
-        in: 'header',
-      },
-      'JWT-auth',
-    )
-    .build();
-  const document = SwaggerModule.createDocument(app, config, {});
-  SwaggerModule.setup('api', app, document);
+  if (nodeEnv === 'prod') {
+    const config = new DocumentBuilder()
+      .setTitle('NestJS Skeleton')
+      .setDescription(
+        'Starter code for lightweight to middle size projects (Backend Development: NestJS)',
+      )
+      .setVersion('1.0')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'JWT',
+          description: 'Enter JWT token',
+          in: 'header',
+        },
+        'JWT-auth',
+      )
+      .build();
+    const document = SwaggerModule.createDocument(app, config, {});
+    SwaggerModule.setup('api', app, document);
+  }
 
   await app.listen(port, () => {
     logger.log(
