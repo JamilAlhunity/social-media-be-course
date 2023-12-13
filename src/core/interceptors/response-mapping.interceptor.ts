@@ -9,7 +9,9 @@ import { map, Observable } from 'rxjs';
 import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-service.interface';
 
 @Injectable()
-export class ResponseMappingInterceptor implements NestInterceptor {
+export class ResponseMappingInterceptor
+  implements NestInterceptor<ResponseFromServiceI, ResponseFromServiceI>
+{
   intercept(
     context: ExecutionContext,
     next: CallHandler<ResponseFromServiceI>,
