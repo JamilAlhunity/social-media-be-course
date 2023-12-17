@@ -15,14 +15,7 @@ export class LoginService {
     private readonly cacheService: CacheService,
     private readonly configService: ConfigService,
   ) {}
-  /**
-   * Provided Email and Password
-   *
-   * If User Exist
-   * Check Password using bcrypt, and I make sure that the checked password aligns with the given email
-   *
-   * action to show that the user logged
-   */
+
   async logUserIn(
     logUserInDto: LogUserInDto,
   ): Promise<ResponseFromServiceI<string>> {

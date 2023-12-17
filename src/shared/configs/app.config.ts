@@ -26,4 +26,4 @@ const responseMappingInterceptor: Provider<ResponseMappingInterceptor> = {
 
 export const filters = [httpExceptionFilterProvider];
 export const guards = [accessTokenGuardProvider];
-export const interceptors = [responseMappingInterceptor, loggingInterceptor];
+export const interceptors = [loggingInterceptor, responseMappingInterceptor];

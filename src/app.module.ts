@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ModulesModule } from 'modules/modules.module';
 import {
@@ -13,6 +18,8 @@ import { LoggerModule } from 'core/lib/logger/logger.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronJobModule } from 'core/lib/cron-job/cron-job.module';
 import { ConfigModule } from '@nestjs/config';
+import helmet from 'helmet';
+import { RequestIdMiddleware } from 'core/middlewares/request-id.middleware';
 
 @Module({
   imports: [
@@ -29,4 +36,11 @@ import { ConfigModule } from '@nestjs/config';
   providers: [...guards, ...filters, ...interceptors],
   exports: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(helmet(), RequestIdMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.ALL,
+    });
+  }
+}

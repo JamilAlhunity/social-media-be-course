@@ -1,11 +1,8 @@
 {
-  "user": "المستخدم",
+  "user": "مستخدم",
   "admin": "ادمن",
-  "post": "منشور",
-  "comment": "تعليق",
   "room": "محادثة",
   "message": "رسالة",
   "email": "الايميل",
-  "notification": "الاشعار",
-  "course": "الدورة"
+  "notification": "اشعار"
 }

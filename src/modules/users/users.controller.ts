@@ -10,32 +10,33 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger/dist/decorators';
+import { ROUTES } from 'shared/constants/routes.constant';
 
-@ApiTags('users')
-@Controller('users')
+@ApiTags(ROUTES.USERS.CONTROLLER)
+@Controller(ROUTES.USERS.CONTROLLER)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
+  @Get(ROUTES.USERS.FIND_ALL)
   findAll() {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
+  @Get(ROUTES.USERS.FIND_ONE)
+  findOne(@Param('userID', ParseIntPipe) userID: number) {
+    return this.usersService.findOne(userID);
   }
 
-  @Patch(':id')
+  @Patch(ROUTES.USERS.UPDATE_ONE)
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('userID', ParseIntPipe) userID: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.update(id, updateUserDto);
+    return this.usersService.update(userID, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @Delete(ROUTES.USERS.DELETE_ONE)
+  remove(@Param('userID') userID: string) {
+    return this.usersService.remove(+userID);
   }
 }
