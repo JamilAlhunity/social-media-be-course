@@ -27,8 +27,8 @@ export class LoggingInterceptor
       map((responseFromApp) => {
         const MS_TO_S = 1000;
         const requestDuration = (Date.now() - then) / MS_TO_S;
-        responseFromApp.requestDuration = requestDuration;
         const loggedRequest = requestMapper(request);
+        responseFromApp.requestDuration = requestDuration;
 
         this.requestsLoggerService.logRequest(loggedRequest, responseFromApp);
 

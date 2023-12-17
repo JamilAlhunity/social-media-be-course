@@ -16,18 +16,17 @@ export type I18nTranslations = {
                 "delete": string;
             };
         };
-        "success": {};
+        "success": {
+            "login": string;
+        };
     };
     "entities": {
         "user": string;
         "admin": string;
-        "post": string;
-        "comment": string;
         "room": string;
         "message": string;
         "email": string;
         "notification": string;
-        "course": string;
     };
     "shared": {
         "success": {
@@ -36,6 +35,8 @@ export type I18nTranslations = {
             "delete": string;
             "reject": string;
             "approve": string;
+            "findOne": string;
+            "findAll": string;
         };
         "errors": {
             "create": string;

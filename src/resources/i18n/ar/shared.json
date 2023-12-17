@@ -4,7 +4,9 @@
     "update": "تم تعديل {entity} بنجاح",
     "delete": "تم حذف {entity} بنجاح",
     "reject": "تم رفض {entity} بنجاح",
-    "approve": "تم قبول {entity} بنجاح"
+    "approve": "تم قبول {entity} بنجاح",
+    "findOne": "تم استرجاع {entity} واحد بنجاح",
+    "findAll": "تم استرجاع مجموعة من ال{entity}"
   },
   "errors": {
     "create": "حدث خطأ عند صنع {entity}",

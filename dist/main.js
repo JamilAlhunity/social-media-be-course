@@ -47,21 +47,23 @@ async function bootstrap() {
         errorHttpStatusCode: common_1.HttpStatus.BAD_REQUEST,
     }));
     app.useLogger(logger);
-    const config = new swagger_1.DocumentBuilder()
-        .setTitle('NestJS Skeleton')
-        .setDescription('Starter code for lightweight to middle size projects (Backend Development: NestJS)')
-        .setVersion('1.0')
-        .addBearerAuth({
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        name: 'JWT',
-        description: 'Enter JWT token',
-        in: 'header',
-    }, 'JWT-auth')
-        .build();
-    const document = swagger_1.SwaggerModule.createDocument(app, config, {});
-    swagger_1.SwaggerModule.setup('api', app, document);
+    if (nodeEnv === 'prod') {
+        const config = new swagger_1.DocumentBuilder()
+            .setTitle('NestJS Skeleton')
+            .setDescription('Starter code for lightweight to middle size projects (Backend Development: NestJS)')
+            .setVersion('1.0')
+            .addBearerAuth({
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            name: 'JWT',
+            description: 'Enter JWT token',
+            in: 'header',
+        }, 'JWT-auth')
+            .build();
+        const document = swagger_1.SwaggerModule.createDocument(app, config, {});
+        swagger_1.SwaggerModule.setup('api', app, document);
+    }
     await app.listen(port, () => {
         logger.log(`Application is running on port: ${port} 🚀 `, 'NestApplication');
     });

@@ -6,7 +6,10 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
-import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-service.interface';
+import {
+  isResponseFromService,
+  ResponseFromServiceI,
+} from 'shared/interfaces/general/response-from-service.interface';
 
 @Injectable()
 export class ResponseMappingInterceptor
@@ -15,13 +18,13 @@ export class ResponseMappingInterceptor
   intercept(
     context: ExecutionContext,
     next: CallHandler<ResponseFromServiceI>,
-  ): Observable<any> {
+  ): Observable<ResponseFromServiceI> {
     const ctx = context.switchToHttp();
     const response = ctx.getResponse<Response>();
 
     return next.handle().pipe(
       map((responseFromService) => {
-        // Code to check if the response from service is valid
+        isResponseFromService(responseFromService); // Throw Exception if something is wrong with the response from the service
         const { data, httpStatus, message } = responseFromService;
         const responseFromApp: ResponseFromServiceI = {
           data,

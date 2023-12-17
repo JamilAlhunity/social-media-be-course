@@ -4,7 +4,9 @@
     "update": "Successfully updated the {entity}",
     "delete": "Successfully deleted the {entity}",
     "approve": "Successfully approved the {entity}",
-    "reject": "Successfully rejected the {entity}"
+    "reject": "Successfully rejected the {entity}",
+    "findOne": "Successfully fetched one {entity}",
+    "findAll": "Successfully fetched {entity}s"
   },
   "errors": {
     "create": "Something went wrong with creating a {entity}",

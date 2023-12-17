@@ -17,7 +17,8 @@ export class RegisterService {
     createUserDto: CreateUserDto,
   ): Promise<ResponseFromServiceI<User>> {
     const { password } = createUserDto;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     createUserDto.password = hashedPassword;
 
     const createdUser = this.usersService.createUserForAuth(createUserDto);

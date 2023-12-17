@@ -27,6 +27,7 @@ async function bootstrap() {
   // ======================================================
   // ! security
   // ======================================================
+
   app.enable('trust proxy');
   app.set('etag', 'strong');
   app.use(bodyParser.json({ limit: '10mb' }));
