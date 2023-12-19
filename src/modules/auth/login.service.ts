@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CacheService } from 'core/lib/cache/cache.service';
+import { CacheObjectI } from 'core/lib/cache/interfaces/cache-object.interface';
 import { UsersService } from 'modules/users/users.service';
 import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-service.interface';
 import { LogUserInDto } from './dto/log-user-in.dto';
@@ -45,10 +46,9 @@ export class LoginService {
       sub: user.id,
     };
 
-    const userFromCache = await this.cacheService.get<{
-      accessToken: string;
-      userID: string;
-    }>(user.id + '');
+    const userFromCache = await this.cacheService.get<CacheObjectI>(
+      user.id + '',
+    );
 
     let accessToken = undefined;
     if (!userFromCache?.accessToken) {
@@ -70,7 +70,7 @@ export class LoginService {
 
       return {
         data: accessToken,
-        message: 'logged in successfully',
+        message: 'auth.success.login',
         httpStatus: HttpStatus.OK,
       };
     }
@@ -79,7 +79,7 @@ export class LoginService {
 
     return {
       data: accessToken,
-      message: 'logged in successfully',
+      message: 'auth.success.login',
       httpStatus: HttpStatus.OK,
     };
   }

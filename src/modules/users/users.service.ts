@@ -1,10 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CacheService } from 'core/lib/cache/cache.service';
+import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-service.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly cacheService: CacheService) {}
   users: User[] = [];
 
   createUserForAuth(createUserDto: CreateUserDto) {
@@ -29,30 +32,63 @@ export class UsersService {
     return createdUser;
   }
 
-  findAll() {
-    return this.users;
-  }
-
-  findOne(id: number) {
-    return this.users.find((user) => user.id === id);
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user)
-      throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
-    user.updateOne(updateUserDto);
+  findAll(): ResponseFromServiceI<User[]> {
     return {
-      data: user,
-      message: 'Updated User Successfully',
-      statusCode: HttpStatus.OK,
+      data: this.users,
+      httpStatus: HttpStatus.OK,
+      message: {
+        translationKey: 'shared.success.findAll',
+        args: { entity: 'entities.user' },
+      },
     };
   }
 
-  remove(id: number) {
-    // TODO: Modify to prevent access to the system
-    // Task 3 (1)
-    return `This action removes a #${id} user`;
+  findOne(id: number): ResponseFromServiceI<User> {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    return {
+      data: user,
+      httpStatus: HttpStatus.OK,
+      message: {
+        translationKey: 'shared.success.findOne',
+        args: { entity: 'entities.user' },
+      },
+    };
+  }
+
+  update(id: number, updateUserDto: UpdateUserDto): ResponseFromServiceI<User> {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    user.updateOne(updateUserDto);
+    return {
+      data: user,
+      message: {
+        translationKey: 'shared.success.update',
+        args: { entity: 'entities.user' },
+      },
+      httpStatus: HttpStatus.OK,
+    };
+  }
+
+  remove(id: number): ResponseFromServiceI<User> {
+    let userToDeleteIndex = -1;
+    this.users.find((user, index) => {
+      if (user.id === id) {
+        userToDeleteIndex = index;
+      }
+    });
+    if (userToDeleteIndex === -1)
+      throw new HttpException('User was not found', HttpStatus.NOT_FOUND);
+    const deletedUser = this.users.splice(userToDeleteIndex, 1)[0];
+    this.cacheService.del(deletedUser.id + '');
+    return {
+      data: deletedUser,
+      message: {
+        translationKey: 'shared.success.delete',
+        args: { entity: 'entities.user' },
+      },
+      httpStatus: HttpStatus.OK,
+    };
   }
 
   findUserByEmail(email: string) {

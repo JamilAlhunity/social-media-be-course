@@ -1,7 +1,7 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { DynamicObjectI } from 'shared/interfaces/general/dynamic-object.interface';
+import { CacheObjectI } from './interfaces/cache-object.interface';
 import { Field } from './types/field.type';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class CacheService {
   }
 
   async deleteField(key: string, field: Field) {
-    const keyFromCache = (await this.get(key)) as DynamicObjectI;
+    const keyFromCache = await this.get<CacheObjectI>(key);
     if (!keyFromCache)
       throw new HttpException(
         'Field ' + field + ' Does not exist',
@@ -32,5 +32,14 @@ export class CacheService {
     return this.set(key, keyFromCache);
   }
 
-  // TODO: Task: create get field function
+  async getField(key: string, field: Field) {
+    const fieldFromCache = await this.get<CacheObjectI>(key);
+
+    if (!fieldFromCache)
+      throw new HttpException(
+        'Field ' + field + ' Does not exist',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    return fieldFromCache[field];
+  }
 }

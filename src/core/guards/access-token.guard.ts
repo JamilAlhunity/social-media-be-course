@@ -6,6 +6,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC_KEY } from 'core/decorators/public.decorator';
 import { CacheService } from 'core/lib/cache/cache.service';
+import { CacheObjectI } from 'core/lib/cache/interfaces/cache-object.interface';
 import { DecodedTokenI } from 'shared/interfaces/http/decoded-token.interface';
 import { RequestI } from 'shared/interfaces/http/request.interface';
 
@@ -49,13 +50,10 @@ export class AccessTokenGuard implements CanActivate {
 
       const { sub } = decodedToken;
 
-      const userFromCache = await this.cacheService.get<{
-        accessToken: string;
-        userID: string;
-      }>(sub + '');
+      const cacheObject = await this.cacheService.get<CacheObjectI>(sub + '');
 
       const isTokenFromCacheSameAsTokenFromHeaders =
-        userFromCache?.accessToken === accessToken;
+        cacheObject?.accessToken === accessToken;
 
       if (!isTokenFromCacheSameAsTokenFromHeaders)
         throw new HttpException('Nice Try', HttpStatus.UNAUTHORIZED);

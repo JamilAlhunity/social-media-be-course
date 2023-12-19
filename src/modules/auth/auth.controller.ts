@@ -1,12 +1,14 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger/dist';
 import { ApiResponse } from '@nestjs/swagger/dist/decorators';
 import { Public } from 'core/decorators/public.decorator';
 import { CreateUserDto } from 'modules/users/dto/create-user.dto';
 import { ROUTES } from 'shared/constants/routes.constant';
+import { RequestI } from 'shared/interfaces/http/request.interface';
 import { registerRouteApiResponse } from './constants/register-route-api-response.conatant';
 import { LogUserInDto } from './dto/log-user-in.dto';
 import { LoginService } from './login.service';
+import { LogoutService } from './logout.service';
 import { RegisterService } from './register.service';
 
 @ApiTags(ROUTES.AUTH.CONTROLLER)
@@ -15,6 +17,7 @@ export class AuthController {
   constructor(
     private readonly loginService: LoginService,
     private readonly registerService: RegisterService,
+    private readonly logoutService: LogoutService,
   ) {}
 
   @Public()
@@ -30,5 +33,8 @@ export class AuthController {
     return this.loginService.logUserIn(logUserInDto);
   }
 
-  // TODO: Logout route
+  @Post(ROUTES.AUTH.LOG_OUT)
+  logUserOut(@Req() request: RequestI) {
+    return this.logoutService.logUserOut(request.user.sub);
+  }
 }

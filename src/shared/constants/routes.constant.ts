@@ -3,6 +3,7 @@ export const ROUTES = {
     CONTROLLER: 'auth',
     REGISTER_USER: 'register-user',
     LOG_USER_IN: 'login-user',
+    LOG_OUT: 'logout',
   },
 
   USERS: {
