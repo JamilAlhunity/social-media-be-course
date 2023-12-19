@@ -36,7 +36,7 @@ export class UsersController {
   }
 
   @Delete(ROUTES.USERS.DELETE_ONE)
-  remove(@Param('userID') userID: string) {
-    return this.usersService.remove(+userID);
+  remove(@Param('userID', ParseIntPipe) userID: number) {
+    return this.usersService.remove(userID);
   }
 }

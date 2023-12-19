@@ -18,6 +18,7 @@ export type I18nTranslations = {
         };
         "success": {
             "login": string;
+            "logout": string;
         };
     };
     "entities": {
