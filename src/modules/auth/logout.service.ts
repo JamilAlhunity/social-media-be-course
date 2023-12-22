@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { CacheService } from 'core/lib/cache/cache.service';
 import { User } from 'modules/users/entities/user.entity';
 import { UsersService } from 'modules/users/users.service';
@@ -11,13 +11,16 @@ export class LogoutService {
     private readonly userService: UsersService,
   ) {}
 
-  async logUserOut(id: number): Promise<ResponseFromServiceI<User>> {
-    await this.cacheService.deleteField(id + '', 'accessToken');
-    const loggedOutUser = this.userService.findOne(id).data;
+  async logUserOut(userID: string): Promise<ResponseFromServiceI<User>> {
+    const userToLogout = await this.userService.findOneByID(userID);
+    if (!userToLogout)
+      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    await this.cacheService.deleteField(userID + '', 'accessToken');
+
     return {
       message: 'auth.success.logout',
       httpStatus: HttpStatus.OK,
-      data: loggedOutUser,
+      data: userToLogout,
     };
   }
 }

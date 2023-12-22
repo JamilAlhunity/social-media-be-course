@@ -1,5 +1,5 @@
 export interface DecodedTokenI {
-  sub: number;
+  sub: string;
   iat: number;
   exp: number;
 }

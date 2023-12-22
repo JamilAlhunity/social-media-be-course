@@ -20,6 +20,7 @@ const cron_job_module_1 = require("./core/lib/cron-job/cron-job.module");
 const config_1 = require("@nestjs/config");
 const helmet_1 = require("helmet");
 const request_id_middleware_1 = require("./core/middlewares/request-id.middleware");
+const typeorm_1 = require("@nestjs/typeorm");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply((0, helmet_1.default)(), request_id_middleware_1.RequestIdMiddleware).forRoutes({
@@ -39,6 +40,7 @@ exports.AppModule = AppModule = __decorate([
             nestjs_i18n_1.I18nModule.forRoot(app_option_1.i18nOptions),
             jwt_1.JwtModule.registerAsync(app_option_1.jwtOptions),
             cache_module_1.CacheModule.register('cache-manager-redis-yet'),
+            typeorm_1.TypeOrmModule.forRootAsync(app_option_1.typeORMOptions),
             modules_module_1.ModulesModule,
         ],
         controllers: [],
