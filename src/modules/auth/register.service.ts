@@ -16,7 +16,8 @@ export class RegisterService {
     const hashedPassword = await bcrypt.hash(password, salt);
     createUserDto.password = hashedPassword;
 
-    const createdUser = this.usersService.createUserForAuth(createUserDto);
+    const createdUser =
+      await this.usersService.createUserForAuth(createUserDto);
 
     return {
       httpStatus: HttpStatus.CREATED,

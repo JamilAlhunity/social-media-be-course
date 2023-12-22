@@ -22,7 +22,7 @@ export class LoginService {
   ): Promise<ResponseFromServiceI<string>> {
     const { email } = logUserInDto;
 
-    const user = this.usersService.findUserByEmail(email);
+    const user = await this.usersService.findUserByEmail(email);
 
     if (!user)
       throw new HttpException(

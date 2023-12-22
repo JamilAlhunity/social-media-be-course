@@ -10,7 +10,7 @@ export const ROUTES = {
     CONTROLLER: 'users',
     FIND_ALL: '',
     FIND_ONE: ':userID',
-    UPDATE_ONE: ':userID',
-    DELETE_ONE: ':userID',
+    UPDATE_ONE: 'update',
+    DELETE_ONE: 'delete',
   },
 };
