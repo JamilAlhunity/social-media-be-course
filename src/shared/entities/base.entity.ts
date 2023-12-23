@@ -15,6 +15,6 @@ export abstract class Base {
   @UpdateDateColumn()
   updatedAt!: string;
 
-  @VersionColumn({ default: 0, nullable: true })
+  @VersionColumn()
   __v!: number;
 }
