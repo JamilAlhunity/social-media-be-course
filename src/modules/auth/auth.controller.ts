@@ -24,7 +24,11 @@ export class AuthController {
   @ApiResponse(registerRouteApiResponse)
   @Post(ROUTES.AUTH.REGISTER_USER)
   registerUser(@Body() createUserDto: CreateUserDto) {
-    return this.registerService.registerUser(createUserDto);
+    try {
+      return this.registerService.registerUser(createUserDto);
+    } catch (error: any) {
+      return error.message;
+    }
   }
 
   @Public()

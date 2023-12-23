@@ -11,13 +11,13 @@ export class LogoutService {
     private readonly userService: UsersService,
   ) {}
 
-  async logUserOut(id: number): Promise<ResponseFromServiceI<User>> {
-    await this.cacheService.deleteField(id + '', 'accessToken');
-    const loggedOutUser = this.userService.findOne(id).data;
+  async logUserOut(userID: string): Promise<ResponseFromServiceI<User>> {
+    const userToLogOut = (await this.userService.findOne(userID)).data;
+    await this.cacheService.deleteField(userID + '', 'accessToken');
     return {
       message: 'auth.success.logout',
       httpStatus: HttpStatus.OK,
-      data: loggedOutUser,
+      data: userToLogOut,
     };
   }
 }

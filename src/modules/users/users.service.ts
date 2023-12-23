@@ -4,37 +4,59 @@ import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-se
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ILike, IsNull, Not, Repository } from 'typeorm';
+import { FilterUsersDto } from './dto/filter-users.dto';
+import { DynamicObjectI } from 'shared/interfaces/general/dynamic-object.interface';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly cacheService: CacheService) {}
-  users: User[] = [];
+  constructor(
+    private readonly cacheService: CacheService,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
-  createUserForAuth(createUserDto: CreateUserDto) {
-    const { email } = createUserDto;
+  async createUserForAuth(createUserDto: CreateUserDto) {
+    // exception for
+    // const { email } = createUserDto;
 
-    const user = this.findUserByEmail(email);
+    // const user = await this.findUserByEmail(email);
 
-    if (!!user)
-      throw new HttpException(
-        'Email already exists, please choose another one',
-        HttpStatus.CONFLICT,
-      );
+    // if (!!user)
+    //   throw new HttpException(
+    //     'Email already exists, please choose another one',
+    //     HttpStatus.CONFLICT,
+    //   );
 
-    let length = this.users.length;
-
-    const createdUser = new User({
-      ...createUserDto,
-      id: length++,
-    });
-    this.users.push(createdUser);
+    const createdUser = this.usersRepository.create(createUserDto);
+    await this.usersRepository.save(createdUser);
 
     return createdUser;
   }
 
-  findAll(): ResponseFromServiceI<User[]> {
+  async findAll(
+    filterUsersDto: FilterUsersDto,
+  ): Promise<ResponseFromServiceI<User[]>> {
+    const { take, skip, email, username } = filterUsersDto;
+    const filterObject: DynamicObjectI = {};
+
+    !email
+      ? (filterObject['email'] = Not(IsNull()))
+      : (filterObject['email'] = ILike(`%${email}%`));
+
+    !username
+      ? (filterObject['username'] = Not(IsNull()))
+      : (filterObject['username'] = ILike(`%${username}%`));
+
+    const users = await this.usersRepository.find({
+      select: ['id', 'username', 'city', 'gender', 'email', '__V'],
+      where: [filterObject],
+      take,
+      skip,
+    });
     return {
-      data: this.users,
+      data: users,
       httpStatus: HttpStatus.OK,
       message: {
         translationKey: 'shared.success.findAll',
@@ -43,8 +65,8 @@ export class UsersService {
     };
   }
 
-  findOne(id: number): ResponseFromServiceI<User> {
-    const user = this.users.find((user) => user.id === id);
+  async findOne(id: string): Promise<ResponseFromServiceI<User>> {
+    const user = await this.usersRepository.findOneBy({ id });
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     return {
       data: user,
@@ -56,12 +78,20 @@ export class UsersService {
     };
   }
 
-  update(id: number, updateUserDto: UpdateUserDto): ResponseFromServiceI<User> {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-    user.updateOne(updateUserDto);
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<ResponseFromServiceI<User>> {
+    const updateResult = await this.usersRepository.update(
+      { id },
+      updateUserDto,
+    );
+
+    if (!updateResult.affected)
+      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+
     return {
-      data: user,
+      data: updateResult.raw,
       message: {
         translationKey: 'shared.success.update',
         args: { entity: 'entities.user' },
@@ -70,19 +100,14 @@ export class UsersService {
     };
   }
 
-  remove(id: number): ResponseFromServiceI<User> {
-    let userToDeleteIndex = -1;
-    this.users.find((user, index) => {
-      if (user.id === id) {
-        userToDeleteIndex = index;
-      }
-    });
-    if (userToDeleteIndex === -1)
+  async remove(id: string): Promise<ResponseFromServiceI<User>> {
+    const deleteResult = await this.usersRepository.delete({ id });
+    if (!deleteResult.affected)
       throw new HttpException('User was not found', HttpStatus.NOT_FOUND);
-    const deletedUser = this.users.splice(userToDeleteIndex, 1)[0];
-    this.cacheService.del(deletedUser.id + '');
+
+    this.cacheService.del(id + '');
     return {
-      data: deletedUser,
+      data: deleteResult.raw,
       message: {
         translationKey: 'shared.success.delete',
         args: { entity: 'entities.user' },
@@ -92,6 +117,7 @@ export class UsersService {
   }
 
   findUserByEmail(email: string) {
-    return this.users.find((user) => user.email === email);
+    const user = this.usersRepository.findOneBy({ email });
+    return user;
   }
 }

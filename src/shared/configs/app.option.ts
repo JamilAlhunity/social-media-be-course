@@ -13,6 +13,7 @@ import { join } from 'path';
 import { RedisClientOptions } from 'redis';
 import * as Joi from 'joi';
 import { ConfigService } from '@nestjs/config/dist';
+import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm/dist/interfaces/typeorm-options.interface';
 
 export const jwtOptions: JwtModuleAsyncOptions = {
   useFactory: async (configService: ConfigService) => ({
@@ -22,16 +23,16 @@ export const jwtOptions: JwtModuleAsyncOptions = {
   inject: [ConfigService],
 };
 
-export const cacheManagerOptions: CacheModuleAsyncOptions<RedisClientOptions> =
-  {
-    useFactory: async () => ({
+export const cacheManagerOptions: CacheModuleAsyncOptions<RedisClientOptions> = {
+    useFactory: async (configService:ConfigService) => ({
       store: redisStore,
       socket: {
-        host: 'localhost',
-        port: 6379,
+        host: configService.get<string>('REDIS_HOST')!,
+        port: +configService.get<number>('REDIS_PORT')!,
         tls: false,
       },
     }),
+    inject:[ConfigService]
   };
 
 export const i18nOptions: I18nOptions = {
@@ -50,6 +51,22 @@ export const i18nOptions: I18nOptions = {
     new CookieResolver(['lang', 'locale', 'l']),
   ],
 };
+export const TypeORMOptions:TypeOrmModuleAsyncOptions = {
+  useFactory: async (configService:ConfigService) => ({
+    type: "postgres",
+    host: configService.get<string>("DB_HOST")!,
+    port: +configService.get<number>("DB_PORT")!, //5432
+    username: configService.get<string>("DB_USERNAME")!,
+    password: configService.get<string>("DB_PASSWORD")!,
+    database: configService.get<string>("DB_NAME")!,
+    entities: [],
+    synchronize: true,
+    retryAttempts:4,
+    retryDelay:10000,
+    autoLoadEntities:true
+  }),
+   inject:[ConfigService]
+}
 
 export const configOptions: ConfigModuleOptions = {
   envFilePath: `.${process.env.NODE_ENV ?? 'development'}.env`,
@@ -69,3 +86,4 @@ export const configOptions: ConfigModuleOptions = {
     APP_NAME: Joi.string().min(3).max(30).required(),
   }),
 };
+
