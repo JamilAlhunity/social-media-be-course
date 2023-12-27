@@ -5,5 +5,14 @@ export const selectUser: string[] | FindOptionsSelect<User> = [
   'id',
   'email',
   'username',
-  'city',
+  'gender',
+  'createdAt',
 ];
+
+export const relationSelectUser: FindOptionsSelect<User> = {
+  id: true,
+  email: true,
+  username: true,
+  gender: true,
+  createdAt: true,
+};

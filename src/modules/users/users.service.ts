@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CacheService } from 'core/lib/cache/cache.service';
 import { DynamicObjectI } from 'shared/interfaces/general/dynamic-object.interface';
 import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-service.interface';
+import { checkNullability } from 'shared/util/nullability.util';
 import { FindOptionsSelect, ILike, IsNull, Not, Repository } from 'typeorm';
 import { selectUser } from './constants/select-user.constant';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -32,10 +33,10 @@ export class UsersService {
     const { skip, take, email, username } = filterUsersDto;
 
     const filterObject: DynamicObjectI = {};
-    !email
+    !checkNullability(email)
       ? (filterObject['email'] = Not(IsNull()))
       : (filterObject['email'] = ILike(`%${email}%`));
-    !username
+    !checkNullability(username)
       ? (filterObject['username'] = Not(IsNull()))
       : (filterObject['username'] = ILike(`%${username}%`));
 
@@ -56,7 +57,10 @@ export class UsersService {
   }
 
   async findOne(userID: string): Promise<ResponseFromServiceI<User>> {
-    const user = await this.usersRepository.findOneBy({ id: userID });
+    const user = await this.usersRepository.findOne({
+      where: { id: userID },
+      select: selectUser as FindOptionsSelect<User>,
+    });
     if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     return {
       data: user,
