@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -29,13 +30,13 @@ export class PostsController {
   }
 
   @Get(':postID')
-  findOne(@Param('postID') postID: string) {
+  findOne(@Param('postID', new ParseUUIDPipe()) postID: string) {
     return this.postsService.findOne(postID);
   }
 
   @Patch(':postID')
   update(
-    @Param('postID') postID: string,
+    @Param('postID', new ParseUUIDPipe()) postID: string,
     @Body() updatePostDto: UpdatePostDto,
     @UserID() userID: string,
   ) {
@@ -43,7 +44,10 @@ export class PostsController {
   }
 
   @Delete(':postID')
-  remove(@Param('postID') postID: string, @UserID() userID: string) {
+  remove(
+    @Param('postID', new ParseUUIDPipe()) postID: string,
+    @UserID() userID: string,
+  ) {
     return this.postsService.remove(postID, userID);
   }
 }
