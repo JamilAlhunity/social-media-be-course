@@ -1,6 +1,7 @@
 import { User } from 'modules/users/entities/user.entity';
 import { Base } from 'shared/entities/base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { PostMedia } from './post-media.entity';
 
 @Entity()
 export class Post extends Base {
@@ -10,9 +11,6 @@ export class Post extends Base {
   @Column({ type: 'varchar', length: 2200, nullable: true })
   text?: string;
 
-  @Column({ type: 'varchar', length: 2048, nullable: true })
-  image?: string;
-
-  @Column({ type: 'varchar', length: 2048, nullable: true })
-  video?: string;
+  @OneToMany(() => PostMedia, (postMedia) => postMedia.post)
+  postMedias!: PostMedia[];
 }

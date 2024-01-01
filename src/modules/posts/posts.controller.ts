@@ -14,27 +14,30 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserID } from 'core/decorators/user-id.decorator';
 import { FilterPostsDto } from './dto/filter-posts.dto';
+import { ROUTES } from 'shared/constants/routes.constant';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('posts')
+@ApiTags(ROUTES.POSTS.CONTROLLER)
+@Controller(ROUTES.POSTS.CONTROLLER)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Post()
+  @Post(ROUTES.POSTS.CREATE)
   create(@Body() createPostDto: CreatePostDto, @UserID() userID: string) {
     return this.postsService.create(createPostDto, userID);
   }
 
-  @Get()
+  @Get(ROUTES.POSTS.FIND_ALL)
   findAll(@Query() filterPostsDto: FilterPostsDto) {
     return this.postsService.findAll(filterPostsDto);
   }
 
-  @Get(':postID')
+  @Get(ROUTES.POSTS.FIND_ONE)
   findOne(@Param('postID', new ParseUUIDPipe()) postID: string) {
     return this.postsService.findOne(postID);
   }
 
-  @Patch(':postID')
+  @Patch(ROUTES.POSTS.UPDATE_ONE)
   update(
     @Param('postID', new ParseUUIDPipe()) postID: string,
     @Body() updatePostDto: UpdatePostDto,
@@ -43,7 +46,7 @@ export class PostsController {
     return this.postsService.update(postID, updatePostDto, userID);
   }
 
-  @Delete(':postID')
+  @Delete(ROUTES.POSTS.DELETE_ONE)
   remove(
     @Param('postID', new ParseUUIDPipe()) postID: string,
     @UserID() userID: string,

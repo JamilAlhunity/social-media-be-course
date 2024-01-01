@@ -3,7 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { relationSelectUser } from 'modules/users/constants/select-user.constant';
 import { UsersService } from 'modules/users/users.service';
 import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-service.interface';
+import { checkArrayNullability } from 'shared/util/nullability.util';
 import { Repository } from 'typeorm';
+import { filterPosts } from './constants/filter-posts.constant';
 import {
   relationSelectPost,
   selectPost,
@@ -11,7 +13,9 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { FilterPostsDto } from './dto/filter-posts.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PostMedia } from './entities/post-media.entity';
 import { Post } from './entities/post.entity';
+import { PostMediaType } from './enums/post-media-type.enum';
 
 @Injectable()
 export class PostsService {
@@ -20,11 +24,15 @@ export class PostsService {
     private postsRepository: Repository<Post>,
 
     private readonly usersService: UsersService,
+
+    @InjectRepository(PostMedia)
+    private postMediasRepository: Repository<PostMedia>,
   ) {}
   async create(
     createPostDto: CreatePostDto,
     userID: string,
   ): Promise<ResponseFromServiceI<Post>> {
+    const { images, videos, ...restOfCreatePostDto } = createPostDto;
     const user = await this.usersService.findOneByID(userID);
 
     if (!user)
@@ -33,10 +41,36 @@ export class PostsService {
         HttpStatus.NOT_FOUND,
       );
 
-    const createdPost = this.postsRepository.create(createPostDto);
-    createdPost.author = user;
+    const postToCreate = this.postsRepository.create(restOfCreatePostDto);
+    postToCreate.author = user;
 
-    await this.postsRepository.save(createdPost);
+    const createdPost = await this.postsRepository.save(postToCreate);
+
+    const imagesPromises: Promise<PostMedia>[] = [];
+    const videosPromises: Promise<PostMedia>[] = [];
+    if (checkArrayNullability(images)) {
+      for (const image of images!) {
+        const postMedia = this.postMediasRepository.create({
+          media: image,
+          post: createdPost,
+          postMediaType: PostMediaType.IMAGE,
+        });
+        imagesPromises.push(this.postMediasRepository.save(postMedia));
+      }
+    }
+
+    if (checkArrayNullability(videos)) {
+      for (const video of videos!) {
+        const postMedia = this.postMediasRepository.create({
+          media: video,
+          post: createdPost,
+          postMediaType: PostMediaType.VIDEO,
+        });
+        videosPromises.push(this.postMediasRepository.save(postMedia));
+      }
+    }
+
+    await Promise.all([...imagesPromises, ...videosPromises]);
 
     return {
       httpStatus: HttpStatus.CREATED,
@@ -44,21 +78,23 @@ export class PostsService {
         translationKey: 'shared.success.create',
         args: { entity: 'entities.post' },
       },
-      data: createdPost,
+      data: postToCreate,
     };
   }
 
   async findAll(
     filterPostsDto: FilterPostsDto,
   ): Promise<ResponseFromServiceI<Post[]>> {
-    const { skip, take } = filterPostsDto;
+    const { skip, take, isAgeRestricted, username } = filterPostsDto;
+
     const posts = await this.postsRepository.find({
-      relations: { author: true },
+      relations: { author: true, postMedias: true },
       select: {
         ...relationSelectPost,
 
         author: relationSelectUser,
       },
+      where: filterPosts(isAgeRestricted, username),
       take,
       skip,
     });

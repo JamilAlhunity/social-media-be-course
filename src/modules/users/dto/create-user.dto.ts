@@ -25,6 +25,11 @@ export class CreateUserDto {
     required: true,
     type: String,
   })
+  @MaxLength(30, {
+    message: i18nValidationMessage<I18nTranslations>('validation.minLength', {
+      max: 30,
+    }),
+  })
   @MinLength(3, {
     message: i18nValidationMessage<I18nTranslations>('validation.minLength', {
       min: 3,
