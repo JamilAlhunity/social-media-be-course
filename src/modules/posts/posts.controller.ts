@@ -28,8 +28,13 @@ export class PostsController {
   }
 
   @Get(ROUTES.POSTS.FIND_ALL)
-  findAll(@Query() filterPostsDto: FilterPostsDto) {
-    return this.postsService.findAll(filterPostsDto);
+  findAll(@Query() filterPostsDto: FilterPostsDto, @UserID() userID: string) {
+    return this.postsService.findAll(filterPostsDto, userID);
+  }
+
+  @Get(ROUTES.POSTS.FEED)
+  postsFeed(@Query() filterPostsDto: FilterPostsDto, @UserID() userID: string) {
+    return this.postsService.postsFeed(filterPostsDto, userID);
   }
 
   @Get(ROUTES.POSTS.FIND_ONE)

@@ -46,13 +46,27 @@ export class UsersController {
 
   @Patch(ROUTES.USERS.FOLLOW_UNFOLLOW)
   followUnfollow(
-    @Param('userToPerformActionOn', new ParseUUIDPipe())
-    userToPerformActionOn: string,
+    @Param('userIDToPerformActionOn', new ParseUUIDPipe())
+    userIDToPerformActionOn: string,
     @UserID() loggedInUserID: string,
   ) {
     return this.usersService.followUnfollow(
-      userToPerformActionOn,
+      userIDToPerformActionOn,
       loggedInUserID,
     );
+  }
+
+  @Get(ROUTES.USERS.FOLLOWERS)
+  findFollowers(
+    @Param('userIDToView', new ParseUUIDPipe()) userIDToView: string,
+  ) {
+    return this.usersService.findFollowers(userIDToView);
+  }
+
+  @Get(ROUTES.USERS.FOLLOWINGS)
+  findFollowings(
+    @Param('userIDToView', new ParseUUIDPipe()) userIDToView: string,
+  ) {
+    return this.usersService.findFollowings(userIDToView);
   }
 }

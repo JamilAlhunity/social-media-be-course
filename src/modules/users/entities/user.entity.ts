@@ -2,6 +2,8 @@ import { Post } from 'modules/posts/entities/post.entity';
 import { Base } from 'shared/entities/base.entity';
 import { Gender } from 'shared/enums/gender.enum';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { AccountStatus } from '../enums/account-status.enum';
+import { ProfileStatus } from '../enums/profile-status.enum';
 import { Follower } from './follower.entity';
 import { Following } from './following.entity';
 
@@ -21,6 +23,12 @@ export class User extends Base {
 
   @Column({ type: 'varchar', length: 29 })
   birthday!: string;
+
+  @Column({ type: 'enum', enum: AccountStatus, default: AccountStatus.ACTIVE })
+  accountStatus!: AccountStatus;
+
+  @Column({ type: 'enum', enum: ProfileStatus, default: ProfileStatus.PUBLIC })
+  profileStatus!: ProfileStatus;
 
   @OneToMany(() => Post, (post) => post.author)
   posts!: Post[];

@@ -2,10 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { relationSelectUser } from 'modules/users/constants/select-user.constant';
 import { UsersService } from 'modules/users/users.service';
+import { emptyRow } from 'shared/error-helpers/empty-row.helper';
 import { ResponseFromServiceI } from 'shared/interfaces/general/response-from-service.interface';
 import { checkArrayNullability } from 'shared/util/nullability.util';
 import { Repository } from 'typeorm';
-import { filterPosts } from './constants/filter-posts.constant';
+import {
+  filterFeedPosts,
+  filterPosts,
+} from './constants/filter-posts.constant';
 import {
   relationSelectPost,
   selectPost,
@@ -84,6 +88,7 @@ export class PostsService {
 
   async findAll(
     filterPostsDto: FilterPostsDto,
+    userID: string,
   ): Promise<ResponseFromServiceI<Post[]>> {
     const { skip, take, isAgeRestricted, username } = filterPostsDto;
 
@@ -94,7 +99,7 @@ export class PostsService {
 
         author: relationSelectUser,
       },
-      where: filterPosts(isAgeRestricted, username),
+      where: filterPosts(userID, isAgeRestricted, username),
       take,
       skip,
     });
@@ -171,6 +176,40 @@ export class PostsService {
         args: { entity: 'entities.post' },
       },
       httpStatus: HttpStatus.OK,
+    };
+  }
+
+  async postsFeed(filterPostsDto: FilterPostsDto, userID: string) {
+    const { skip, take, isAgeRestricted, username } = filterPostsDto;
+    const user = await this.usersService.findOneWithOptions({
+      relations: { followings: { follower: true } },
+      where: { id: userID },
+    });
+
+    emptyRow(user, 'user');
+
+    const followings =
+      user?.followings.map((following) => following.follower.id) ?? [];
+
+    const posts = await this.postsRepository.find({
+      relations: { author: true, postMedias: true },
+      select: {
+        ...relationSelectPost,
+
+        author: relationSelectUser,
+      },
+      where: filterFeedPosts(followings, isAgeRestricted, username),
+      take,
+      skip,
+    });
+
+    return {
+      data: posts,
+      httpStatus: HttpStatus.OK,
+      message: {
+        translationKey: 'shared.success.findAll',
+        args: { entity: 'entities.post' },
+      },
     };
   }
 }
