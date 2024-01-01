@@ -5,14 +5,12 @@ export const selectPost: string[] | FindOptionsSelect<Post> = [
   'id',
   'createdAt',
   'text',
-  'image',
-  'video',
+  'postMedias',
 ];
 
 export const relationSelectPost: FindOptionsSelect<Post> = {
   id: true,
   createdAt: true,
   text: true,
-  image: true,
-  video: true,
+  postMedias: true,
 };

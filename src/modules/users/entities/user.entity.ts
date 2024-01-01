@@ -2,6 +2,8 @@ import { Post } from 'modules/posts/entities/post.entity';
 import { Base } from 'shared/entities/base.entity';
 import { Gender } from 'shared/enums/gender.enum';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { Follower } from './follower.entity';
+import { Following } from './following.entity';
 
 @Entity()
 export class User extends Base {
@@ -22,4 +24,10 @@ export class User extends Base {
 
   @OneToMany(() => Post, (post) => post.author)
   posts!: Post[];
+
+  @OneToMany(() => Follower, (follower) => follower.author)
+  followers!: Follower[];
+
+  @OneToMany(() => Following, (following) => following.author)
+  followings!: Following[];
 }

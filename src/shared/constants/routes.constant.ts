@@ -12,5 +12,15 @@ export const ROUTES = {
     FIND_ONE: ':userID',
     UPDATE_ONE: 'update',
     DELETE_ONE: 'delete',
+    FOLLOW_UNFOLLOW: 'follow-unfollow/:userToPerformActionOn',
+  },
+
+  POSTS: {
+    CONTROLLER: 'users',
+    CREATE: '',
+    FIND_ALL: '',
+    FIND_ONE: ':userID',
+    UPDATE_ONE: ':userID',
+    DELETE_ONE: ':userID',
   },
 };

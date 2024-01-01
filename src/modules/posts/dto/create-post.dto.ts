@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -11,12 +12,12 @@ import { I18nTranslations } from 'resources/generated/i18n.generated';
 
 export class CreatePostDto {
   @ApiProperty({
-    description: "Post's image",
+    description: "Post's images",
     example: 'https:',
     isArray: false,
     maxLength: 2048,
     minLength: 3,
-    name: 'image',
+    name: 'images',
     required: false,
     type: String,
   })
@@ -24,28 +25,33 @@ export class CreatePostDto {
     message: i18nValidationMessage<I18nTranslations>('validation.minLength', {
       max: 2048,
     }),
+    each: true,
   })
   @MinLength(3, {
     message: i18nValidationMessage<I18nTranslations>('validation.minLength', {
       min: 3,
     }),
+    each: true,
   })
   @IsString({
     message: i18nValidationMessage<I18nTranslations>('validation.isString'),
+    each: true,
   })
+  @IsArray()
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>('validation.isNotEmpty'),
+    each: true,
   })
   @IsOptional()
-  image?: string;
+  images?: string[];
 
   @ApiProperty({
-    description: "Post's video",
+    description: "Post's videos",
     example: 'https:',
     isArray: false,
     maxLength: 2048,
     minLength: 3,
-    name: 'video',
+    name: 'videos',
     required: false,
     type: String,
   })
@@ -53,20 +59,25 @@ export class CreatePostDto {
     message: i18nValidationMessage<I18nTranslations>('validation.minLength', {
       max: 2048,
     }),
+    each: true,
   })
   @MinLength(3, {
     message: i18nValidationMessage<I18nTranslations>('validation.minLength', {
       min: 3,
     }),
+    each: true,
   })
   @IsString({
     message: i18nValidationMessage<I18nTranslations>('validation.isString'),
+    each: true,
   })
+  @IsArray()
   @IsNotEmpty({
     message: i18nValidationMessage<I18nTranslations>('validation.isNotEmpty'),
+    each: true,
   })
   @IsOptional()
-  video?: string;
+  videos?: string[];
 
   @ApiProperty({
     description: "Post's text",

@@ -43,4 +43,16 @@ export class UsersController {
   remove(@UserID() userID: string) {
     return this.usersService.remove(userID);
   }
+
+  @Patch(ROUTES.USERS.FOLLOW_UNFOLLOW)
+  followUnfollow(
+    @Param('userToPerformActionOn', new ParseUUIDPipe())
+    userToPerformActionOn: string,
+    @UserID() loggedInUserID: string,
+  ) {
+    return this.usersService.followUnfollow(
+      userToPerformActionOn,
+      loggedInUserID,
+    );
+  }
 }
