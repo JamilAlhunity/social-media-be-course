@@ -28,7 +28,7 @@ export const ROUTES = {
   },
   COMMENTS: {
     CONTROLLER: 'comments',
-    FIND_ALL: '',
+    FIND_ALL_FROM_POST: ':postID',
     CREATE: ':postID',
     FIND_ONE: ':commentID',
     UPDATE_ONE: ':commentID',

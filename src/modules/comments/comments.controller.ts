@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ROUTES } from 'shared/constants/routes.constant';
 import { ApiTags } from '@nestjs/swagger';
 import { UserID } from 'core/decorators/user-id.decorator';
+import { FilterCommentsDto } from './dto/filter-comment.dto';
 
 @ApiTags(ROUTES.COMMENTS.CONTROLLER)
 @Controller(ROUTES.COMMENTS.CONTROLLER)
@@ -20,23 +21,29 @@ export class CommentsController {
     return this.commentsService.create(createCommentDto, postID, userID);
   }
 
-  @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  @Get(ROUTES.COMMENTS.FIND_ALL_FROM_POST)
+  findAllFromPost(
+    @Param('postID', new ParseUUIDPipe()) postID: string,
+    @Query() filterCommentsDto: FilterCommentsDto,
+  ) {
+    return this.commentsService.findAllFromPost(postID, filterCommentsDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(+id);
+
+  @Patch(ROUTES.COMMENTS.UPDATE_ONE)
+  update(
+    @Param('commentID', new ParseUUIDPipe()) commentID: string,
+    @UserID() userID: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return this.commentsService.update(commentID, userID, updateCommentDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(+id, updateCommentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+  @Delete(ROUTES.COMMENTS.DELETE_ONE)
+  remove(
+    @Param('commentID', new ParseUUIDPipe()) commentID: string,
+    @UserID() userID: string,
+  ) {
+    return this.commentsService.remove(commentID, userID);
   }
 }
