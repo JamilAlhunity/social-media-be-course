@@ -26,4 +26,12 @@ export const ROUTES = {
     DELETE_ONE: ':postID',
     FEED: 'feed',
   },
+  COMMENTS: {
+    CONTROLLER: 'comments',
+    FIND_ALL_FROM_POST: ':postID',
+    CREATE: ':postID',
+    FIND_ONE: ':commentID',
+    UPDATE_ONE: ':commentID',
+    DELETE_ONE: ':commentID',
+  }
 };

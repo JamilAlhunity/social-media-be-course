@@ -31,7 +31,7 @@ export class PostsService {
 
     @InjectRepository(PostMedia)
     private postMediasRepository: Repository<PostMedia>,
-  ) {}
+  ) { }
   async create(
     createPostDto: CreatePostDto,
     userID: string,
@@ -211,5 +211,9 @@ export class PostsService {
         args: { entity: 'entities.post' },
       },
     };
+  }
+
+  findOneByID(postID: string) {
+    return this.postsRepository.findOneBy({ id: postID });
   }
 }
