@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,10 +7,11 @@ import { UniqueColumnValidator } from './decorator/unique-column.decorator';
 import { Follower } from './entities/follower.entity';
 import { Following } from './entities/following.entity';
 
+@Global()
 @Module({
   controllers: [UsersController],
   providers: [UsersService, UniqueColumnValidator],
   exports: [UsersService],
   imports: [TypeOrmModule.forFeature([User, Follower, Following])],
 })
-export class UsersModule {}
+export class UsersModule { }

@@ -29,6 +29,7 @@ export type I18nTranslations = {
         "email": string;
         "notification": string;
         "post": string;
+        "comment": string;
     };
     "shared": {
         "success": {
