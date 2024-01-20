@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
@@ -8,6 +9,7 @@ import {
 } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { I18nTranslations } from 'resources/generated/i18n.generated';
+import { IsValidPost } from '../decorator/is-valid-post.decorator';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -37,6 +39,9 @@ export class CreatePostDto {
     message: i18nValidationMessage<I18nTranslations>('validation.isNotEmpty'),
   })
   @IsOptional()
+  @IsValidPost({
+    message: i18nValidationMessage<I18nTranslations>('validation.isInvalidPost'),
+  })
   image?: string;
 
   @ApiProperty({
@@ -66,6 +71,9 @@ export class CreatePostDto {
     message: i18nValidationMessage<I18nTranslations>('validation.isNotEmpty'),
   })
   @IsOptional()
+  @IsValidPost({
+    message: i18nValidationMessage<I18nTranslations>('validation.isInvalidPost'),
+  })
   video?: string;
 
   @ApiProperty({
@@ -89,5 +97,8 @@ export class CreatePostDto {
     message: i18nValidationMessage<I18nTranslations>('validation.isNotEmpty'),
   })
   @IsOptional()
+  @IsValidPost({
+    message: i18nValidationMessage<I18nTranslations>('validation.isInvalidPost'),
+  })
   text?: string;
 }

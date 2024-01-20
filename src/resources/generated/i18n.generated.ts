@@ -79,6 +79,7 @@ export type I18nTranslations = {
         "throttlerError": string;
         "fileType": string;
         "fileSize": string;
+        "isInvalidPost": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;
